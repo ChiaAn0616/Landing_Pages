@@ -1,8 +1,6 @@
-⚠️ Important Access Note
+### ⚠️ Important Access Note
+For the best viewing experience, please ensure the URL begins with `http://` instead of `https://`.
 
-For the best viewing experience, please ensure the URL begins with http:// instead of https:// when opening the demo link:
+# [http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/](http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/)
 
-http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/
-
-Some devices (especially mobile phones and iPads) may automatically change the link to https://, which can cause the page to fail loading and show “The connection was reset.”
-If this happens, simply edit the address bar to start with http:// and reload the page.
+> **Note:** Some devices may auto-change the link to `https://`. If the page fails, edit the address bar to start with `http://`.
