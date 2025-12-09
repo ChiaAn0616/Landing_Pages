@@ -1,4 +1,3 @@
-http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/
 
 <h3>⚠️ Important Access Note</h3>
 <p>For the best viewing experience, please ensure the URL begins with <b>http://</b> instead of https://.</p>
@@ -6,6 +5,7 @@ http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/
 <h1 align="center">
   <a href="http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/">
     CLICK HERE TO OPEN SITE
+    <h3>http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/</h3>
   </a>
 </h1>
 
