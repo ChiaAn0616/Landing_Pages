@@ -5,8 +5,9 @@
 <h1 align="center">
   <a href="http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/">
     CLICK HERE TO OPEN SITE
-    <h3>http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/</h3>
   </a>
 </h1>
+
+<h2 align="center">http://tuition-landing-page.s3-website-ap-southeast-1.amazonaws.com/</h2>>
 
 <p><i>If the page says "Connection Reset," manually remove the 's' from 'https' in your browser bar.</i></p>
