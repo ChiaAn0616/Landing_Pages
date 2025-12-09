@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradeBooster | Sunway Damansara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <style>
+        /* =========================================
+           1. CORE DESIGN SYSTEM
+           ========================================= */
+        :root {
+            /* Palette */
+            --primary: #0f172a;       /* Deep Navy */
+            --primary-light: #1e293b;
+            --accent: #6366f1;        /* Electric Indigo */
+            --accent-glow: rgba(99, 102, 241, 0.5);
+            --gold: #f59e0b;          /* SPM Gold */
+            --gold-glow: rgba(245, 158, 11, 0.4);
+            --success: #10b981;
+            --bg: #f8fafc;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --blur: blur(12px);
+            --trans: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* =========================================
+           2. ANIMATIONS & UTILITIES
+           ========================================= */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating { animation: float 6s ease-in-out infinite; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 12px 30px; border-radius: 50px; font-weight: 700;
+            text-decoration: none; transition: var(--trans); border: none; cursor: pointer;
+            font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; font-size: 1rem;
+        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); background: var(--accent); box-shadow: 0 15px 30px -5px var(--accent-glow); }
+
+        .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: white; box-shadow: 0 10px 20px -5px var(--gold-glow); animation: pulse 2s infinite; }
+        .btn-gold:hover { transform: scale(1.05); }
+
+        .btn-whatsapp-float {
+            position: fixed; bottom: 25px; right: 25px;
+            background: var(--success); color: white; width: 55px; height: 55px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            z-index: 999; transition: var(--trans);
+        }
+        .btn-whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
+
+        /* =========================================
+           3. NAVIGATION
+           ========================================= */
+        nav {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: var(--blur);
+            border-bottom: var(--glass-border); padding: 12px 0;
+        }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .logo span { color: var(--accent); }
+        .lang-toggle {
+            background: white; border: 1px solid #e2e8f0; padding: 6px 15px;
+            border-radius: 30px; font-weight: 600; color: var(--primary); font-size: 0.85rem;
+            cursor: pointer; transition: 0.3s; white-space: nowrap;
+        }
+        .lang-toggle:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* =========================================
+           4. HERO SECTION
+           ========================================= */
+        header { padding: 60px 0 40px; position: relative; overflow: hidden; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .hero-badge {
+            background: rgba(99, 102, 241, 0.1); color: var(--accent);
+            padding: 6px 14px; border-radius: 30px; font-weight: 700;
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+            display: inline-block; margin-bottom: 15px;
+        }
+        h1 { 
+            font-family: 'Outfit', sans-serif; font-size: clamp(2.5rem, 5vw, 3.5rem); 
+            line-height: 1.1; font-weight: 800; color: var(--primary); margin-bottom: 20px; 
+        }
+        .highlight { background: linear-gradient(120deg, var(--accent) 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-desc { font-size: 1.1rem; color: var(--text-light); margin-bottom: 30px; line-height: 1.6; }
+        .hero-img-box { position: relative; width: 100%; }
+        .lottie-box {
+            background: white; border-radius: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            padding: 10px; width: 100%;
+        }
+        .float-card {
+            position: absolute; bottom: -20px; left: -20px;
+            background: white; padding: 15px; border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 12px;
+            border: var(--glass-border); z-index: 10;
+        }
+        .float-icon { width: 40px; height: 40px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+        /* =========================================
+           5. STATS COUNTER
+           ========================================= */
+        .stats-strip {
+            background: var(--primary); color: white; padding: 40px 0;
+            border-radius: 25px; margin: 40px 0;
+            display: flex; justify-content: space-around; align-items: center;
+            flex-wrap: wrap; text-align: center; gap: 20px;
+        }
+        .stat-box { flex: 1; min-width: 120px; }
+        .stat-num { font-size: 2.5rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--gold); display: block; margin-bottom: 5px; }
+        .stat-label { opacity: 0.8; font-size: 0.9rem; }
+
+        /* =========================================
+           6. METHODOLOGY CARDS
+           ========================================= */
+        .section-title { text-align: center; font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 10px; color: var(--primary); }
+        .section-sub { text-align: center; color: var(--text-light); max-width: 600px; margin: 0 auto 50px; font-size: 1rem; line-height: 1.6; }
+        .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card {
+            background: white; padding: 30px; border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: var(--trans); border: 1px solid #f1f5f9;
+            position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .card-num {
+            font-size: 3rem; font-weight: 800; color: #f1f5f9;
+            position: absolute; top: 10px; right: 20px; z-index: 0;
+        }
+        .card-content { position: relative; z-index: 1; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 10px; color: var(--primary); }
+        .icon-container {
+            width: 50px; height: 50px; border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-bottom: 20px;
+        }
+        .icon-container svg { width: 25px; height: 25px; }
+
+        /* =========================================
+           7. ROADMAP
+           ========================================= */
+        .roadmap-container { position: relative; max-width: 800px; margin: 60px auto; padding: 20px 0; }
+        .roadmap-container::after {
+            content: ''; position: absolute; width: 4px; background-color: #e2e8f0;
+            top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 2px;
+        }
+        .timeline-item { padding: 10px 30px; position: relative; background-color: inherit; width: 50%; opacity: 0; transition: all 0.8s; }
+        .timeline-item.active { opacity: 1; }
+        .timeline-item::after {
+            content: ''; position: absolute; width: 16px; height: 16px; right: -8px; top: 25px;
+            background-color: white; border: 3px solid var(--accent); border-radius: 50%; z-index: 1;
+        }
+        .timeline-left { left: 0; text-align: right; }
+        .timeline-right { left: 50%; }
+        .timeline-right::after { left: -8px; }
+        .timeline-content {
+            padding: 20px; background: white; border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;
+        }
+        .timeline-content h3 { font-size: 1.1rem; color: var(--primary); margin: 5px 0; }
+        .timeline-content span { color: var(--accent); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+        .timeline-content p { font-size: 0.9rem; color: var(--text-light); }
+
+        /* =========================================
+           8. SPM GOLD SECTION
+           ========================================= */
+        .spm-section {
+            margin: 80px 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 30px; padding: 50px 30px;
+            color: white; position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .spm-section::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .spm-content { position: relative; z-index: 2; display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+        .spm-text { flex: 2; min-width: 300px; }
+        .spm-price-box {
+            flex: 1; min-width: 280px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            padding: 30px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .spm-list-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.95rem; }
+        .spm-list-item svg { color: var(--gold); width: 20px; height: 20px; }
+
+        /* =========================================
+           9. CALCULATOR
+           ========================================= */
+        .calc-wrapper {
+            background: white; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 40px 30px; max-width: 900px; margin: 0 auto;
+            border: 1px solid #e2e8f0;
+        }
+        .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .subject-options { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; 
+            max-height: 400px; overflow-y: auto; padding-right: 5px;
+        }
+        .subject-options-title { grid-column: 1 / -1; margin-bottom: 10px; color: var(--primary); font-size: 1.1rem; }
+        .sub-label {
+            padding: 12px; border-radius: 12px; border: 2px solid #e2e8f0;
+            cursor: pointer; font-weight: 600; display: flex; flex-direction: column; justify-content: space-between;
+            transition: 0.2s; font-size: 0.85rem;
+        }
+        .sub-checkbox:checked + .sub-label { border-color: var(--accent); background: #eef2ff; color: var(--accent); }
+        .sub-label span:last-child { font-size: 0.75rem; opacity: 0.7; margin-top: 3px; }
+        .sub-checkbox { display: none; }
+        .price-display {
+            background: var(--primary); color: white;
+            border-radius: 25px; padding: 30px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center;
+            position: sticky; top: 80px;
+        }
+        .total-price { font-size: 3.5rem; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
+
+        /* =========================================
+           10. TESTIMONIALS & FAQ
+           ========================================= */
+        .testimonial-slider { margin: 60px 0; position: relative; overflow: hidden; }
+        .slider-track { display: flex; transition: transform 0.5s ease-in-out; }
+        .testimonial-card { min-width: 100%; padding: 20px; text-align: center; }
+        .quote-box {
+            background: white; border-radius: 25px; padding: 30px 20px; max-width: 700px; margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; position: relative;
+        }
+        .quote-icon { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .quote-text { font-size: 1rem; font-style: italic; color: var(--text-main); margin-bottom: 15px; line-height: 1.6; }
+        
+        .slider-dots { text-align: center; margin-top: 10px; }
+        .dot { height: 10px; width: 10px; background-color: #cbd5e1; border-radius: 50%; display: inline-block; margin: 0 4px; cursor: pointer; transition: 0.3s; }
+        .dot.active { background-color: var(--accent); width: 25px; border-radius: 10px; }
+
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { background: white; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; overflow: hidden; }
+        .faq-question {
+            padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; font-size: 1rem; color: var(--primary); background: white; transition: 0.3s;
+        }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #f8fafc; color: var(--text-light); }
+        .faq-answer p { padding: 15px 20px; font-size: 0.95rem; line-height: 1.6; }
+        .faq-icon { transition: 0.3s; width: 20px; height: 20px; color: var(--accent); }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+        .faq-item.active .faq-answer { max-height: 200px; }
+
+        /* =========================================
+           11. FOOTER (FIXED & COMPACT)
+           ========================================= */
+        .map-container { height: 350px; border-radius: 25px; overflow: hidden; margin-top: 40px; }
+        
+        footer {
+            background-color: var(--primary); /* Dark Navy */
+            color: #f8fafc;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        .footer-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+        }
+        .footer-top {
+            display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-bottom: 30px;
+        }
+        .footer-section { flex: 1; min-width: 250px; }
+        .footer-section h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; color: #ffffff; }
+        .footer-section.about p { font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; opacity: 0.8; }
+        
+        .footer-section.contact ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section.contact li { display: flex; align-items: flex-start; margin-bottom: 0.8rem; }
+        
+        /* FIXED ICON SIZES */
+        .footer-section.contact li svg {
+            width: 20px; height: 20px; margin-right: 12px; flex-shrink: 0; 
+            stroke: #cbd5e1; fill: none;
+        }
+        .footer-section.contact li span { font-size: 0.9rem; color: #cbd5e1; line-height: 1.4; }
+        
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; text-align: center; }
+        .footer-bottom p { font-size: 0.8rem; color: #94a3b8; margin: 0; }
+
+        /* =========================================
+           12. MOBILE SPECIFIC OVERRIDES
+           ========================================= */
+        @media (max-width: 768px) {
+            header, section { padding: 40px 0; }
+            .hero-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .hero-img-box { order: -1; }
+            .hero-desc { margin-left: auto; margin-right: auto; }
+            .float-card { display: none; }
+            .lottie-box { max-width: 300px; margin: 0 auto; }
+            .stats-strip { flex-direction: column; gap: 30px; padding: 30px; }
+            
+            .roadmap-container::after { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; text-align: left; }
+            .timeline-item::after { left: 9px; right: auto; }
+            .timeline-left, .timeline-right { left: 0; transform: none; }
+            
+            .spm-content { flex-direction: column; text-align: center; }
+            .spm-list-item { justify-content: center; }
+            
+            .calc-wrapper { padding: 25px 20px; }
+            .calc-grid { grid-template-columns: 1fr; gap: 30px; }
+            .subject-options { grid-template-columns: 1fr; max-height: 300px; }
+            .price-display { position: relative; top: 0; margin-top: 20px; }
+            
+            /* Footer Mobile */
+            .footer-top { flex-direction: column; gap: 30px; }
+            .footer-section h3 { margin-bottom: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <div class="logo">Grade<span>Booster</span></div>
+            <div class="nav-actions" style="display:flex; gap:10px; align-items:center;">
+                <button class="lang-toggle" onclick="toggleLanguage()" id="langBtn">CN / EN</button>
+                <a href="#calculator" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.85rem;">Price</a>
+            </div>
+        </div>
+    </nav>
+
+    <a href="https://wa.me/60123456789?text=Hi,%20I%20saw%20your%20website!" class="btn-whatsapp-float" target="_blank" title="Chat with us">
+        <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-8.683-2.031-.967-.272-.297-.471-.445-.446-.149.025.297.05 4.706.223 6.19 1.486 1.486 9.543 2.628 10.342 6.192 10.342.347 0 .569.05.817.149.248.1.595.248 1.164.148.57-.1.744-.693.842-1.386.1-.693.05-1.189-.024-1.313z"/></svg>
+    </a>
+
+    <header>
+        <div class="container hero-grid">
+            <div class="reveal active">
+                <span class="hero-badge">Sunway Damansara</span>
+                <h1 id="hero-title">
+                    Not Just Better Grades.<br>
+                    <span class="highlight">A Better Future.</span>
+                </h1>
+                <p class="hero-desc" id="hero-desc">
+                    We don't force memorization. We build the logic and confidence your child needs to conquer KSSR & KSSM exams.
+                </p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                    <a href="#spm" class="btn btn-gold" id="btn-spm">SPM Intensive</a>
+                    <a href="#method" class="btn btn-primary" id="btn-method">Our Method</a>
+                </div>
+            </div>
+            
+            <div class="hero-img-box floating">
+                <div class="lottie-box">
+                    <lottie-player 
+                        src="https://assets5.lottiefiles.com/packages/lf20_DMgKk1.json" 
+                        background="transparent" 
+                        speed="1" 
+                        style="width: 100%; height: auto;" 
+                        loop 
+                        autoplay>
+                    </lottie-player>
+                </div>
+                
+                <div class="float-card">
+                    <div class="float-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
+                    <div>
+                        <strong style="display:block; color:var(--primary)">Results</strong>
+                        <span style="font-size: 0.8rem; color: #64748B;">Improved by 2 Grades</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-strip reveal">
+            <div class="stat-box">
+                <span class="stat-num" data-target="100">0</span>
+                <span class="stat-label">Improvement Rate (%)</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-num" data-target="5">0</span>
+                <span class="stat-label">Years of Excellence</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-num" data-target="150">0</span>
+                <span class="stat-label">Students Helped</span>
+            </div>
+        </div>
+    </div>
+
+    <section id="method">
+        <div class="container">
+            <h2 class="section-title" id="m-title">The Secret Sauce</h2>
+            <p class="section-sub" id="m-sub">Most centers lecture. We engineer success through a 3-step loop.</p>
+            
+            <div class="method-grid">
+                <div class="card reveal">
+                    <div class="card-num">01</div>
+                    <div class="card-content">
+                        <div class="icon-container" style="background: #e0e7ff; color: var(--accent);">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                        <h3 id="c1-title">Micro-Assessment</h3>
+                        <p id="c1-desc" style="color:var(--text-light); font-size:0.95rem;">We diagnose specific weak points. Is it Algebra? Grammar? We find the root cause, not just the symptom.</p>
+                    </div>
+                </div>
+                <div class="card reveal" style="transition-delay: 0.2s;">
+                    <div class="card-num">02</div>
+                    <div class="card-content">
+                        <div class="icon-container" style="background: #fef3c7; color: var(--gold);">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h3 id="c2-title">Custom Strategy</h3>
+                        <p id="c2-desc" style="color:var(--text-light); font-size:0.95rem;">No generic textbooks. We build a roadmap tailored to your child's learning speed and school syllabus.</p>
+                    </div>
+                </div>
+                <div class="card reveal" style="transition-delay: 0.4s;">
+                    <div class="card-num">03</div>
+                    <div class="card-content">
+                        <div class="icon-container" style="background: #dcfce7; color: var(--success);">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        </div>
+                        <h3 id="c3-title">Real-Time Feedback</h3>
+                        <p id="c3-desc" style="color:var(--text-light); font-size:0.95rem;">Parents are partners. You receive WhatsApp updates after every session. No surprises at exam time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 class="section-title">Roadmap to Success</h2>
+        <div class="roadmap-container">
+            <div class="timeline-item timeline-left reveal">
+                <div class="timeline-content">
+                    <span>Month 1</span>
+                    <h3>Foundation Repair</h3>
+                    <p>We identify gaps from previous years and rebuild the basics.</p>
+                </div>
+            </div>
+            <div class="timeline-item timeline-right reveal">
+                <div class="timeline-content">
+                    <span>Month 2</span>
+                    <h3>Answering Technique</h3>
+                    <p>Learning how to score. Keywords, structure, and exam format mastery.</p>
+                </div>
+            </div>
+            <div class="timeline-item timeline-left reveal">
+                <div class="timeline-content">
+                    <span>Month 3</span>
+                    <h3>Exam Simulation</h3>
+                    <p>Timed practice papers to build speed and reduce anxiety.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="spm" class="container">
+        <div class="spm-section reveal">
+            <div class="spm-content">
+                <div class="spm-text">
+                    <span style="background:var(--gold); color:white; padding:5px 15px; border-radius:20px; font-weight:700; font-size:0.8rem; margin-bottom:15px; display:inline-block;">FORM 5 STUDENTS ONLY</span>
+                    <h2 style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px; font-family: 'Outfit', sans-serif;" id="spm-title">SPM Intensive Boosting Class</h2>
+                    <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 30px;" id="spm-desc">
+                        3 Months to Turn It Around. We focus purely on high-probability questions (Ramalan) and answering techniques.
+                    </p>
+                    <ul style="list-style: none; margin-bottom: 30px;">
+                        <li class="spm-list-item">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                            <strong>Past Year Analysis</strong>
+                        </li>
+                        <li class="spm-list-item">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                            <strong>Time Management Drills</strong>
+                        </li>
+                        <li class="spm-list-item">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                            <strong>Targeted "A" Grade Strategy</strong>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="spm-price-box">
+                    <div style="font-size: 3.5rem; font-weight: 800; color: var(--gold);">RM 120</div>
+                    <div style="margin-bottom: 20px; opacity: 0.8;">Per Subject / Month</div>
+                    <a href="https://wa.me/60123456789?text=I%20want%20to%20secure%20an%20SPM%20seat" class="btn btn-gold" style="width: 100%;">Secure Seat</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="calculator" style="padding: 60px 0;">
+        <div class="container">
+            <h2 class="section-title" id="calc-title">Fee Calculator</h2>
+            <p class="section-sub" id="calc-sub">Select subjects to see how much you save with our bundles.</p>
+            
+            <div class="calc-wrapper reveal">
+                <div class="calc-grid">
+                    <div class="subject-options">
+                        <h3 class="subject-options-title">Select Subjects:</h3>
+                        <input type="checkbox" id="sub1" class="sub-checkbox" onchange="calculateTotal()"><label for="sub1" class="sub-label"><span id="sub-bm">Bahasa Melayu</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub2" class="sub-checkbox" onchange="calculateTotal()"><label for="sub2" class="sub-label"><span id="sub-bi">Bahasa Inggeris</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub3" class="sub-checkbox" onchange="calculateTotal()"><label for="sub3" class="sub-label"><span id="sub-bc">Bahasa Cina</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub4" class="sub-checkbox" onchange="calculateTotal()"><label for="sub4" class="sub-label"><span id="sub-sej">Sejarah</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub5" class="sub-checkbox" onchange="calculateTotal()"><label for="sub5" class="sub-label"><span id="sub-moral">Pendidikan Moral</span> <span>+RM 70</span></label>
+
+                        <input type="checkbox" id="sub6" class="sub-checkbox" onchange="calculateTotal()"><label for="sub6" class="sub-label"><span id="sub-math">Mathematics</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub7" class="sub-checkbox" onchange="calculateTotal()"><label for="sub7" class="sub-label"><span id="sub-addmath">Add Math</span> <span>+RM 70</span></label>
+
+                        <input type="checkbox" id="sub8" class="sub-checkbox" onchange="calculateTotal()"><label for="sub8" class="sub-label"><span id="sub-bio">Biology</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub9" class="sub-checkbox" onchange="calculateTotal()"><label for="sub9" class="sub-label"><span id="sub-phy">Physics</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub10" class="sub-checkbox" onchange="calculateTotal()"><label for="sub10" class="sub-label"><span id="sub-chem">Chemistry</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub11" class="sub-checkbox" onchange="calculateTotal()"><label for="sub11" class="sub-label"><span id="sub-sci">Science (General)</span> <span>+RM 70</span></label>
+
+                        <input type="checkbox" id="sub12" class="sub-checkbox" onchange="calculateTotal()"><label for="sub12" class="sub-label"><span id="sub-acc">Prinsip Perakaunan</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub13" class="sub-checkbox" onchange="calculateTotal()"><label for="sub13" class="sub-label"><span id="sub-eko">Ekonomi</span> <span>+RM 70</span></label>
+                        <input type="checkbox" id="sub14" class="sub-checkbox" onchange="calculateTotal()"><label for="sub14" class="sub-label"><span id="sub-other">Other Subjects</span> <span>+RM 70</span></label>
+                    </div>
+
+                    <div class="price-display">
+                        <div style="font-size: 1rem; opacity: 0.8; margin-bottom: 10px;" id="lbl-total">Estimated Monthly Fee</div>
+                        <div class="total-price">RM <span id="finalPrice">0</span></div>
+                        <div class="savings-tag" id="savingsTag">You Save RM 0!</div>
+                        
+                        <div style="margin-top: 20px; font-size: 0.85rem; opacity: 0.7;">
+                            *Extra subjects after 3rd get <strong>RM10 discount</strong> each.
+                        </div>
+                        <a href="https://wa.me/60123456789?text=I%20calculated%20my%20fee" class="btn btn-primary" style="background: white; color: var(--primary); margin-top: 20px;">Confirm This Price</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 class="section-title">What Parents Say</h2>
+        <div class="testimonial-slider" id="testimonialSlider">
+            <div class="slider-track" id="sliderTrack">
+                <div class="testimonial-card">
+                    <div class="quote-box">
+                        <div class="quote-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z" /></svg></div>
+                        <p class="quote-text">"My son went from failing Maths to scoring an A in his SPM trials. The tutors here truly care."</p>
+                        <p class="quote-author">- Mrs. Tan</p>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-box">
+                        <div class="quote-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z" /></svg></div>
+                        <p class="quote-text">"The answering techniques taught were a game changer. Highly recommended for Form 5 students."</p>
+                        <p class="quote-author">- Ahmad F.</p>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-box">
+                        <div class="quote-icon"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z" /></svg></div>
+                        <p class="quote-text">"Small classes mean the teacher actually pays attention to my daughter. Her confidence has improved so much."</p>
+                        <p class="quote-author">- Sarah L.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-dots" id="sliderDots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="padding-bottom: 60px;">
+        <h2 class="section-title">Common Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    Do you offer trial classes?
+                    <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! We offer a paid trial session so you can experience our teaching style before committing to a full month.</p>
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    What if my child misses a class?
+                    <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>We can arrange a replacement class if there is another slot available, or provide recording/materials for that week.</p>
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    Do you cover the syllabus?
+                    <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, we strictly follow the Malaysian KSSR and KSSM syllabus to ensure students are ready for school exams.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 30px 0 0;">
+        <div class="container text-center">
+            <h2 class="section-title" id="loc-title">Find Us</h2>
+            <div class="map-container reveal">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    marginheight="0" 
+                    marginwidth="0" 
+                    src="https://maps.google.com/maps?q=Tower+C,+Jalan+PJU+3/29,+Sunway+Damansara,+47810+Petaling+Jaya,+Selangor&t=&z=15&ie=UTF8&iwloc=&output=embed">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-section about">
+                    <h3>GradeBooster</h3>
+                    <p>Helping students in Petaling Jaya achieve academic excellence through personalized learning strategies since 2020.</p>
+                </div>
+
+                <div class="footer-section contact">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Tower C, Jalan PJU 3/29, Sunway Damansara, 47810 Petaling Jaya</span>
+                        </li>
+                        <li>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.05 12.05 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            <span>+60 12-345 6789</span>
+                        </li>
+                        <li>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span>inquiry@gradebooster.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 GradeBooster Tuisyen. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. LANGUAGE DATA ---
+        const langData = {
+            en: {
+                heroTitle: "Not Just Better Grades.<br><span class='highlight'>A Better Future.</span>",
+                heroDesc: "We don't force memorization. We build the logic and confidence your child needs to conquer KSSR & KSSM exams.",
+                btnSpm: "SPM Intensive",
+                btnMethod: "Our Method",
+                mTitle: "The Secret Sauce",
+                mSub: "Most centers lecture. We engineer success through a 3-step loop.",
+                c1t: "Micro-Assessment", c1d: "We diagnose specific weak points. Is it Algebra? Grammar? We find the root cause.",
+                c2t: "Custom Strategy", c2d: "No generic textbooks. We build a roadmap tailored to your child's learning speed.",
+                c3t: "Real-Time Feedback", c3d: "Parents are partners. You receive WhatsApp updates after every session.",
+                spmTitle: "SPM Intensive Boosting Class",
+                spmDesc: "3 Months to Turn It Around. We focus purely on high-probability questions and answering techniques.",
+                calcTitle: "Fee Calculator",
+                calcSub: "Select subjects to see how much you save with our bundles.",
+                // SUBJECTS
+                subBm: "Bahasa Melayu", subBi: "Bahasa Inggeris", subBc: "Bahasa Cina", subSej: "Sejarah", subMoral: "Pendidikan Moral",
+                subMath: "Mathematics", subAddmath: "Add Math",
+                subBio: "Biology", subPhy: "Physics", subChem: "Chemistry", subSci: "Science",
+                subAcc: "Prinsip Perakaunan", subEko: "Ekonomi", subOther: "Other Subjects",
+                
+                lblTotal: "Estimated Monthly Fee",
+                locTitle: "Find Us"
+            },
+            cn: {
+                heroTitle: "不仅仅是成绩提升。<br><span class='highlight'>而是更好的未来。</span>",
+                heroDesc: "我们不强迫死记硬背。我们建立孩子征服 KSSR 和 KSSM 考试所需的逻辑和自信。",
+                btnSpm: "SPM 冲刺班",
+                btnMethod: "教学方法",
+                mTitle: "我们的秘诀",
+                mSub: "大多数中心只是讲课。我们通过三步循环设计成功。",
+                c1t: "精准评估", c1d: "我们诊断具体的弱点。是代数吗？是语法吗？我们找出根本原因。",
+                c2t: "定制策略", c2d: "没有通用的教科书。我们根据孩子的学习速度制定路线图。",
+                c3t: "实时反馈", c3d: "家长是合作伙伴。每节课后您都会收到 WhatsApp 更新。",
+                spmTitle: "SPM 强化冲刺班",
+                spmDesc: "3个月逆袭。我们专注于高概率考题和答题技巧。",
+                calcTitle: "互动学费计算器",
+                calcSub: "选择科目，看看我们的配套能为您节省多少。",
+                // SUBJECTS CN
+                subBm: "马来文", subBi: "英文", subBc: "华文", subSej: "历史", subMoral: "道德教育",
+                subMath: "数学", subAddmath: "高级数学",
+                subBio: "生物", subPhy: "物理", subChem: "化学", subSci: "科学",
+                subAcc: "会计 (Akaun)", subEko: "经济 (Ekonomi)", subOther: "其他科目",
+
+                lblTotal: "预计月费",
+                locTitle: "联系我们"
+            }
+        };
+
+        // --- 2. LANGUAGE TOGGLE LOGIC ---
+        let currentLang = 'en';
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            const t = langData[currentLang];
+            const set = (id, html) => {
+                const el = document.getElementById(id);
+                if(el) { el.style.opacity = 0; setTimeout(() => { el.innerHTML = html; el.style.opacity = 1; }, 300); }
+            };
+
+            set('hero-title', t.heroTitle); set('hero-desc', t.heroDesc); set('btn-spm', t.btnSpm); set('btn-method', t.btnMethod);
+            set('m-title', t.mTitle); set('m-sub', t.mSub); set('c1-title', t.c1t); set('c1-desc', t.c1d);
+            set('c2-title', t.c2t); set('c2-desc', t.c2d); set('c3-title', t.c3t); set('c3-desc', t.c3d);
+            set('spm-title', t.spmTitle); set('spm-desc', t.spmDesc); set('calc-title', t.calcTitle); set('calc-sub', t.calcSub);
+            
+            set('sub-bm', t.subBm); set('sub-bi', t.subBi); set('sub-bc', t.subBc); set('sub-sej', t.subSej); set('sub-moral', t.subMoral);
+            set('sub-math', t.subMath); set('sub-addmath', t.subAddmath);
+            set('sub-bio', t.subBio); set('sub-phy', t.subPhy); set('sub-chem', t.subChem); set('sub-sci', t.subSci);
+            set('sub-acc', t.subAcc); set('sub-eko', t.subEko); set('sub-other', t.subOther);
+
+            set('lbl-total', t.lblTotal); set('loc-title', t.locTitle);
+        }
+
+        // --- 3. PRICING CALCULATOR LOGIC ---
+        function calculateTotal() {
+            const checkboxes = document.querySelectorAll('.sub-checkbox');
+            let count = 0;
+            checkboxes.forEach(box => { if(box.checked) count++; });
+            let price = 0; let savings = 0;
+
+            if (count === 1) { price = 70; savings = 0; }
+            else if (count === 2) { price = 130; savings = 10; }
+            else if (count === 3) { price = 180; savings = 30; }
+            else if (count >= 4) { 
+                price = 180 + ((count - 3) * 60);
+                savings = (count * 70) - price;
+            }
+            else { price = 0; savings = 0; }
+
+            const priceEl = document.getElementById('finalPrice');
+            animateValue(priceEl, parseInt(priceEl.innerText), price, 500);
+
+            const saveTag = document.getElementById('savingsTag');
+            if (savings > 0) {
+                saveTag.innerText = currentLang === 'en' ? `You Save RM ${savings}!` : `您节省 RM ${savings}!`;
+                saveTag.classList.add('show');
+            } else {
+                saveTag.classList.remove('show');
+            }
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) { window.requestAnimationFrame(step); }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- 4. TESTIMONIAL SLIDER LOGIC ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.testimonial-card').length;
+        const track = document.getElementById('sliderTrack');
+        const dots = document.querySelectorAll('.dot');
+
+        function goToSlide(index) {
+            currentSlide = index;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+        }
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides;
+            goToSlide(currentSlide);
+        }, 5000);
+
+        // --- 5. FAQ LOGIC ---
+        function toggleFaq(item) {
+            const wasActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+            if(!wasActive) item.classList.add('active');
+        }
+
+        // --- 6. SCROLL ANIMATIONS ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if(entry.target.classList.contains('stats-strip')) {
+                        document.querySelectorAll('.stat-num').forEach(c => {
+                            animateValue(c, 0, +c.getAttribute('data-target'), 2000);
+                        });
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal, .stats-strip, .timeline-item').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
