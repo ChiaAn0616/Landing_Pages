@@ -1,4 +1,4 @@
-#Landing Pages Showcase
+##Landing Pages Showcase
 
 This repository contains all the landing pages I create for clients and personal projects.
 Only the live demo links are publicly accessible — the source code is kept private to protect client work and project assets.
